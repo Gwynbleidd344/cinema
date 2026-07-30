@@ -43,6 +43,10 @@ public class Room {
   private Integer capacity;
 
   @Builder.Default
-  @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+  @OneToMany(
+      mappedBy = "room",
+      cascade = CascadeType.ALL,
+      orphanRemoval = true,
+      fetch = FetchType.LAZY)
   private List<Seat> seats = new ArrayList<>();
 }
