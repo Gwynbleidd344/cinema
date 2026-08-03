@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, UUID> {
 
-  // Used to enforce that a CLIENT can only access their own reservation (GET /reservation/{id}).
   Optional<Reservation> findByIdAndCreatedBy_Id(UUID id, UUID createdById);
 
   List<Reservation> findByCreatedBy_Id(UUID createdById);
