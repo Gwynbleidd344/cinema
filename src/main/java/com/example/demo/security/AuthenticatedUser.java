@@ -3,7 +3,6 @@ package com.example.demo.security;
 import java.util.UUID;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-
 public final class AuthenticatedUser {
 
   private AuthenticatedUser() {}
