@@ -1,6 +1,7 @@
 package com.example.demo.endpoint.rest.controller.movie;
 
 import com.example.demo.endpoint.rest.controller.movie.dto.CreateMovieRequest;
+import com.example.demo.endpoint.rest.controller.movie.dto.UpsertMovieRequest;
 import com.example.demo.model.MovieModel;
 import com.example.demo.model.mapper.MovieMapper;
 import com.example.demo.service.MovieService;
@@ -10,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,6 +39,18 @@ public class MovieController {
     var saved =
         movieService.create(
             request.title(), request.genres(), request.description(), request.duration());
+    return movieMapper.apply(saved);
+  }
+
+  @PutMapping("/movies")
+  public MovieModel upsert(@RequestBody UpsertMovieRequest request) {
+    var saved =
+        movieService.upsert(
+            request.id(),
+            request.title(),
+            request.genres(),
+            request.description(),
+            request.duration());
     return movieMapper.apply(saved);
   }
 }

@@ -38,4 +38,14 @@ public class MovieService {
             .build();
     return movieRepository.save(movie);
   }
+
+  public Movie upsert(
+      UUID id, String title, Set<Genre> genres, String description, Duration duration) {
+    Movie movie = id == null ? new Movie() : get(id);
+    movie.setTitle(title);
+    movie.setGenres(genres);
+    movie.setDescription(description);
+    movie.setDuration(duration);
+    return movieRepository.save(movie);
+  }
 }
