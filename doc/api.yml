@@ -1,0 +1,614 @@
+openapi: 3.0.3
+info:
+  title: Cinema Reservation API
+
+servers:
+  - url: /api/v1
+
+security:
+  - bearerAuth: []
+
+tags:
+  - name: Movies
+  - name: Rooms
+  - name: Seats
+  - name: Projections
+  - name: Reservations
+  - name: Users
+
+paths:
+  /movies:
+    get:
+      tags: [Movies]
+      summary: List movies
+      description: Returns 200 for everyone (ASSUMPTION - no explicit rule given, mirrors GET /projections rule).
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Movie"
+    post:
+      tags: [Movies]
+      summary: Create a movie
+      description: Same access rule as PUT /movies (ASSUMPTION - only MANAGER may create).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MovieInput"
+      responses:
+        "200":
+          description: Created (MANAGER)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Movie"
+        "403":
+          description: Forbidden for CLIENT and EMPLOYEE
+    put:
+      tags: [Movies]
+      summary: Create or update a movie
+      description: |
+        Business rule:
+        - 403 for CLIENT and EMPLOYEE
+        - 200 for MANAGER
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Movie"
+      responses:
+        "200":
+          description: OK - MANAGER
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Movie"
+        "403":
+          description: Forbidden - CLIENT or EMPLOYEE
+
+  /movies/{id}:
+    get:
+      tags: [Movies]
+      summary: Get a movie by id
+      description: Returns 200 for everyone (ASSUMPTION).
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Movie"
+        "404":
+          description: Not found
+    delete:
+      tags: [Movies]
+      summary: Delete a movie
+      description: ASSUMPTION - restricted to MANAGER, mirroring the PUT /movies rule.
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "204":
+          description: Deleted - MANAGER
+        "403":
+          description: Forbidden - CLIENT or EMPLOYEE
+
+  /rooms:
+    get:
+      tags: [Rooms]
+      summary: List rooms
+      description: ASSUMPTION - 200 for MANAGER and EMPLOYEE, 403 for CLIENT (mirrors GET /reservations rule).
+      responses:
+        "200":
+          description: OK - MANAGER, EMPLOYEE
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Room"
+        "403":
+          description: Forbidden - CLIENT
+    put:
+      tags: [Rooms]
+      summary: Create or update a room
+      description: ASSUMPTION - 200 for MANAGER only, mirroring PUT /movies and PUT /projection.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Room"
+      responses:
+        "200":
+          description: OK - MANAGER
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Room"
+        "403":
+          description: Forbidden - CLIENT or EMPLOYEE
+
+  /rooms/{id}:
+    get:
+      tags: [Rooms]
+      summary: Get a room by id
+      description: ASSUMPTION - 200 for MANAGER and EMPLOYEE, 403 for CLIENT.
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK - MANAGER, EMPLOYEE
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Room"
+        "403":
+          description: Forbidden - CLIENT
+        "404":
+          description: Not found
+
+  /seats:
+    get:
+      tags: [Seats]
+      summary: List seats (optionally filter by room)
+      description: 200 for everyone (ASSUMPTION - needed to build a reservation as CLIENT).
+      parameters:
+        - name: roomId
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Seat"
+    put:
+      tags: [Seats]
+      summary: Create or update a seat
+      description: ASSUMPTION - 200 for MANAGER only.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Seat"
+      responses:
+        "200":
+          description: OK - MANAGER
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Seat"
+        "403":
+          description: Forbidden - CLIENT or EMPLOYEE
+
+  /seats/{id}:
+    get:
+      tags: [Seats]
+      summary: Get a seat by id
+      description: 200 for everyone (ASSUMPTION).
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Seat"
+        "404":
+          description: Not found
+
+  /projections:
+    get:
+      tags: [Projections]
+      summary: List projections
+      description: |
+        Business rule:
+        - 200 for everyone.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Projection"
+    put:
+      tags: [Projections]
+      summary: Create or update a projection
+      description: |
+        Business rule:
+        - 403 for CLIENT and EMPLOYEE
+        - 200 for MANAGER
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Projection"
+      responses:
+        "200":
+          description: OK - MANAGER
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Projection"
+        "403":
+          description: Forbidden - CLIENT or EMPLOYEE
+
+  /projections/{id}:
+    get:
+      tags: [Projections]
+      summary: Get a projection by id
+      description: 200 for everyone (ASSUMPTION - same rule as GET /projections).
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Projection"
+        "404":
+          description: Not found
+
+  /reservations:
+    get:
+      tags: [Reservations]
+      summary: List reservations
+      description: |
+        Business rule:
+        - 403 for CLIENT
+        - 200 for MANAGER and EMPLOYEE
+      responses:
+        "200":
+          description: OK - MANAGER, EMPLOYEE
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Reservation"
+        "403":
+          description: Forbidden - CLIENT
+    post:
+      tags: [Reservations]
+      summary: Create a reservation
+      description: ASSUMPTION - 200 for CLIENT (books for themselves), EMPLOYEE and MANAGER.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReservationInput"
+      responses:
+        "200":
+          description: OK - CLIENT, EMPLOYEE, MANAGER
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reservation"
+
+  /reservations/{id}:
+    get:
+      tags: [Reservations]
+      summary: Get a reservation by id
+      description: |
+        Business rule:
+        - 200 if the CLIENT owns the reservation
+        - 403 if it is another CLIENT's reservation
+        - 200 for MANAGER and EMPLOYEE
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK - owning CLIENT, MANAGER, or EMPLOYEE
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reservation"
+        "403":
+          description: Forbidden - CLIENT does not own this reservation
+        "404":
+          description: Not found
+
+  /reservation:
+    put:
+      tags: [Reservations]
+      summary: Update / validate a reservation
+      description: |
+        Business rule:
+        - 200 for CLIENTS (but only EMPLOYEES can validate the reservation,
+          i.e. transition its status to SUCCESS)
+        - 200 for EMPLOYEES and MANAGERS
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Reservation"
+      responses:
+        "200":
+          description: OK - CLIENT (own, non-validating changes), EMPLOYEE, MANAGER
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reservation"
+        "403":
+          description: Forbidden - e.g. CLIENT attempting to validate (set status to SUCCESS)
+
+  /users:
+    get:
+      tags: [Users]
+      summary: List users
+      description: ASSUMPTION - 200 for MANAGER and EMPLOYEE, 403 for CLIENT.
+      responses:
+        "200":
+          description: OK - MANAGER, EMPLOYEE
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+        "403":
+          description: Forbidden - CLIENT
+    post:
+      tags: [Users]
+      summary: Register a user
+      description: ASSUMPTION - open to everyone (sign-up).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserInput"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+  /users/{id}:
+    get:
+      tags: [Users]
+      summary: Get a user by id
+      description: ASSUMPTION - 200 if the CLIENT is requesting their own profile, 200 for MANAGER/EMPLOYEE, 403 otherwise (mirrors GET /reservations/{id} rule).
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK - own profile, MANAGER, or EMPLOYEE
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "403":
+          description: Forbidden - another CLIENT's profile
+        "404":
+          description: Not found
+    put:
+      tags: [Users]
+      summary: Update a user
+      description: ASSUMPTION - CLIENT may update own profile, MANAGER may update anyone, EMPLOYEE limited (not specified).
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "403":
+          description: Forbidden
+    delete:
+      tags: [Users]
+      summary: Delete a user
+      description: ASSUMPTION - MANAGER only.
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "204":
+          description: Deleted - MANAGER
+        "403":
+          description: Forbidden - CLIENT or EMPLOYEE
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    IdParam:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+  schemas:
+    Genre:
+      type: string
+      enum: [THRILLER, ROMANCE, COMEDY, DRAMA, ACTION, SCI_FI, FANTASY, ANIMATION]
+
+    ReservationStatus:
+      type: string
+      enum: [PENDING, SUCCESS, CANCELED]
+
+    UserRole:
+      type: string
+      enum: [CLIENT, EMPLOYEE, MANAGER]
+
+    Room:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        number:
+          type: string
+        capacity:
+          type: integer
+      required: [number, capacity]
+
+    Seat:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        number:
+          type: string
+        roomId:
+          type: string
+          format: uuid
+      required: [number, roomId]
+
+    Movie:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        title:
+          type: string
+        genres:
+          type: array
+          items:
+            $ref: "#/components/schemas/Genre"
+        description:
+          type: string
+        duration:
+          type: string
+          description: ISO-8601 duration (e.g. PT2H15M)
+      required: [title, genres, description, duration]
+
+    MovieInput:
+      allOf:
+        - $ref: "#/components/schemas/Movie"
+
+    Projection:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        movieId:
+          type: string
+          format: uuid
+        roomId:
+          type: string
+          format: uuid
+        datetime:
+          type: string
+          format: date-time
+        seatPrice:
+          type: number
+          format: decimal
+      required: [movieId, roomId, datetime, seatPrice]
+
+    Reservation:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        userId:
+          type: string
+          format: uuid
+        projectionId:
+          type: string
+          format: uuid
+        seatIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        status:
+          $ref: "#/components/schemas/ReservationStatus"
+      required: [userId, projectionId, seatIds, status]
+
+    ReservationInput:
+      type: object
+      properties:
+        projectionId:
+          type: string
+          format: uuid
+        seatIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+      required: [projectionId, seatIds]
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        firstName:
+          type: string
+        lastName:
+          type: string
+        birthdate:
+          type: string
+          format: date
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        role:
+          $ref: "#/components/schemas/UserRole"
+      required: [firstName, lastName, birthdate, email, phone, role]
+
+    UserInput:
+      allOf:
+        - $ref: "#/components/schemas/User"
+        - type: object
+          properties:
+            password:
+              type: string
+              format: password
+          required: [password]
