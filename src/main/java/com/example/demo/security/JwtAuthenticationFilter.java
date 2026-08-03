@@ -15,12 +15,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-/**
- * Runs once per request. If a valid "Authorization: Bearer <token>" header is present, the
- * authenticated principal is set to the user's UUID (extracted from the token subject), with a
- * single ROLE_<role> authority. Controllers/services can read it back via {@link
- * AuthenticatedUser}.
- */
+
 @Component
 @AllArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -51,7 +46,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         SecurityContextHolder.getContext().setAuthentication(authentication);
       }
     } catch (Exception e) {
-      // Malformed/tampered token: leave the context empty, request will be treated as anonymous.
       SecurityContextHolder.clearContext();
     }
 

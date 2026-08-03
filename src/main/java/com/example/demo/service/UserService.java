@@ -36,8 +36,6 @@ public class UserService {
             .email(email)
             .phone(phone)
             .password(passwordEncoder.encode(rawPassword))
-            // Self sign-up always creates a CLIENT: never trust a role coming from the request
-            // body, or anyone could register as MANAGER.
             .role(UserRole.CLIENT)
             .build();
 

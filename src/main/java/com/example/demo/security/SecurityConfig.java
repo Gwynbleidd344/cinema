@@ -13,13 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-/**
- * Stateless, JWT-based security. Path/role rules below cover everything from doc/api.yml that can
- * be expressed statically. Rules that depend on *who owns a resource* (GET /reservations/{id},
- * GET/PUT /users/{id}, "only EMPLOYEE can validate a reservation") can't be expressed as a path
- * matcher — those are left as "authenticated()" here and must be enforced in the controller/service
- * using {@link AuthenticatedUser}.
- */
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity

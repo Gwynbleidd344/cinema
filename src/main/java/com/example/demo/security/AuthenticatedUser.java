@@ -3,18 +3,7 @@ package com.example.demo.security;
 import java.util.UUID;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-/**
- * Convenience accessors for the currently authenticated user, set by {@link
- * JwtAuthenticationFilter}. Use this in controllers/services to implement the ownership rules that
- * can't be expressed as static path/role rules in SecurityConfig, e.g.:
- *
- * <pre>
- *   if (!AuthenticatedUser.hasAnyRole("MANAGER", "EMPLOYEE")
- *       && !reservation.getCreatedBy().getId().equals(AuthenticatedUser.id())) {
- *     throw new ResponseStatusException(HttpStatus.FORBIDDEN);
- *   }
- * </pre>
- */
+
 public final class AuthenticatedUser {
 
   private AuthenticatedUser() {}
