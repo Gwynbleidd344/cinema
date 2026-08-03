@@ -48,4 +48,11 @@ public class MovieService {
     movie.setDuration(duration);
     return movieRepository.save(movie);
   }
+
+  public void delete(UUID id) {
+    if (!movieRepository.existsById(id)) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+    }
+    movieRepository.deleteById(id);
+  }
 }
