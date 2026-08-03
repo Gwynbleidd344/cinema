@@ -11,7 +11,6 @@ import java.util.function.Function;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-
 @Component
 public class JwtService {
 
@@ -56,8 +55,7 @@ public class JwtService {
   }
 
   private <T> T extractClaim(String token, Function<Claims, T> resolver) {
-    Claims claims =
-        Jwts.parser().setSigningKey(signingKey).build().parseClaimsJws(token).getBody();
+    Claims claims = Jwts.parser().setSigningKey(signingKey).build().parseClaimsJws(token).getBody();
     return resolver.apply(claims);
   }
 }
