@@ -27,18 +27,11 @@ public class ReservationController {
   private final ReservationService reservationService;
   private final ReservationMapper reservationMapper;
 
-  /**
-   * GET /reservations — 403 for CLIENT, 200 for MANAGER and EMPLOYEE.
-   *
-   * <p>Role check is enforced upstream by SecurityConfig (hasAnyRole MANAGER, EMPLOYEE), so this
-   * method only runs for callers who are already allowed to see everything.
-   */
   @GetMapping("/reservations")
   public List<ReservationModel> list() {
     return reservationService.list().stream().map(reservationMapper).toList();
   }
 
-  /** POST /reservations — 200 for CLIENT (books for themselves), EMPLOYEE and MANAGER. */
   @PostMapping("/reservations")
   public ReservationModel create(@RequestBody CreateReservationRequest request) {
     UUID requesterId = AuthenticatedUser.id();
@@ -46,10 +39,6 @@ public class ReservationController {
     return reservationMapper.apply(saved);
   }
 
-  /**
-   * GET /reservations/{id} — 200 if the CLIENT owns the reservation, 403 if it belongs to another
-   * CLIENT, 200 for MANAGER and EMPLOYEE.
-   */
   @GetMapping("/reservations/{id}")
   public ReservationModel get(@PathVariable UUID id) {
     UUID requesterId = AuthenticatedUser.id();
@@ -64,10 +53,6 @@ public class ReservationController {
     return reservationMapper.apply(reservation);
   }
 
-  /**
-   * PUT /reservation — 200 for CLIENTS updating their own reservation (but only EMPLOYEES /
-   * MANAGERS may validate it, i.e. set status to SUCCESS), 200 for EMPLOYEES and MANAGERS.
-   */
   @PutMapping("/reservation")
   public ReservationModel update(@RequestBody UpdateReservationRequest request) {
     UUID requesterId = AuthenticatedUser.id();

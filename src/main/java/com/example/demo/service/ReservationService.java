@@ -130,7 +130,7 @@ public class ReservationService {
     return new HashSet<>(seats);
   }
 
-  /** Rejects seats already held by a non-canceled reservation for the same projection. */
+  //Rejects seats already held by a non-canceled reservation for the same projection
   private void ensureSeatsAreFree(UUID projectionId, Set<UUID> seatIds, UUID excludingReservationId) {
     Set<UUID> takenSeatIds =
         reservationRepository.findByProjection_Id(projectionId).stream()
