@@ -88,7 +88,8 @@ public class ReservationService {
     }
 
     boolean attemptsValidation =
-        newStatus == ReservationStatus.SUCCESS && reservation.getStatus() != ReservationStatus.SUCCESS;
+        newStatus == ReservationStatus.SUCCESS
+            && reservation.getStatus() != ReservationStatus.SUCCESS;
     if (attemptsValidation && !isEmployeeOrManager) {
       throw new ResponseStatusException(
           HttpStatus.FORBIDDEN, "Only an employee or manager may validate a reservation");
@@ -130,12 +131,14 @@ public class ReservationService {
     return new HashSet<>(seats);
   }
 
-  //Rejects seats already held by a non-canceled reservation for the same projection
-  private void ensureSeatsAreFree(UUID projectionId, Set<UUID> seatIds, UUID excludingReservationId) {
+  // Rejects seats already held by a non-canceled reservation for the same projection
+  private void ensureSeatsAreFree(
+      UUID projectionId, Set<UUID> seatIds, UUID excludingReservationId) {
     Set<UUID> takenSeatIds =
         reservationRepository.findByProjection_Id(projectionId).stream()
             .filter(r -> r.getStatus() != ReservationStatus.CANCELED)
-            .filter(r -> excludingReservationId == null || !r.getId().equals(excludingReservationId))
+            .filter(
+                r -> excludingReservationId == null || !r.getId().equals(excludingReservationId))
             .flatMap(r -> r.getSeats().stream())
             .map(Seat::getId)
             .collect(Collectors.toSet());
