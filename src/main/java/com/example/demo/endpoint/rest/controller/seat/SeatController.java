@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,5 +23,10 @@ public class SeatController {
   @GetMapping("/seats")
   public List<SeatModel> list(@RequestParam(required = false) UUID roomId) {
     return seatService.list(roomId).stream().map(seatMapper).toList();
+  }
+
+  @GetMapping("/seats/{id}")
+  public SeatModel get(@PathVariable UUID id) {
+    return seatMapper.apply(seatService.get(id));
   }
 }
