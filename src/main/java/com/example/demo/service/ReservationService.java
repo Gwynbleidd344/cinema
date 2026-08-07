@@ -39,8 +39,9 @@ public class ReservationService {
   @Transactional
   public Reservation get(UUID id) {
     Reservation reservation =
-            reservationRepository.findById(id)
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        reservationRepository
+            .findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
     reservation.getSeats().size();
     return reservation;
