@@ -9,6 +9,7 @@ import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -18,16 +19,19 @@ public class SeatService {
   private final SeatRepository seatRepository;
   private final RoomRepository roomRepository;
 
+  @Transactional(readOnly = true)
   public List<Seat> list(UUID roomId) {
     return roomId == null ? seatRepository.findAll() : seatRepository.findByRoom_Id(roomId);
   }
 
+  @Transactional(readOnly = true)
   public Seat get(UUID id) {
     return seatRepository
         .findById(id)
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
   }
 
+  @Transactional
   public Seat upsert(UUID id, String number, UUID roomId) {
     Room room =
         roomRepository

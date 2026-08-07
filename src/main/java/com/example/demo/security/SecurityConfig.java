@@ -32,7 +32,8 @@ public class SecurityConfig {
         .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(
             auth ->
-                auth.requestMatchers("/ping", "/health/**")
+                auth.requestMatchers("/error").permitAll()
+                        .requestMatchers("/ping", "/health/**")
                     .permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/v1/auth/login")
                     .permitAll()

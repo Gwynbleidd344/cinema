@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -19,6 +20,7 @@ public class AuthService {
 
   public record LoginResult(String token, User user) {}
 
+  @Transactional
   public LoginResult login(String email, String password) {
     User user =
         userRepository

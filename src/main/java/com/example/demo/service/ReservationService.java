@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -30,16 +31,22 @@ public class ReservationService {
   private final SeatRepository seatRepository;
   private final UserRepository userRepository;
 
+  @Transactional(readOnly = true)
   public List<Reservation> list() {
     return reservationRepository.findAll();
   }
 
+  @Transactional
   public Reservation get(UUID id) {
-    return reservationRepository
-        .findById(id)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    Reservation reservation =
+            reservationRepository.findById(id)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+    reservation.getSeats().size();
+    return reservation;
   }
 
+  @Transactional
   public Reservation create(UUID projectionId, Set<UUID> seatIds, UUID requesterId) {
     if (seatIds == null || seatIds.isEmpty()) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "seatIds must not be empty");
@@ -74,6 +81,7 @@ public class ReservationService {
     return reservationRepository.save(reservation);
   }
 
+  @Transactional
   public Reservation update(
       UUID id,
       ReservationStatus newStatus,
