@@ -24,4 +24,11 @@ public class RoomService {
         .findById(id)
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
   }
+
+  public Room upsert(UUID id, String number, Integer capacity) {
+    Room room = id == null ? new Room() : get(id);
+    room.setNumber(number);
+    room.setCapacity(capacity);
+    return roomRepository.save(room);
+  }
 }
