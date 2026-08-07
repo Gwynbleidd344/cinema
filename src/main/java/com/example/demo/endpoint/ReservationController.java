@@ -24,43 +24,43 @@ import org.springframework.web.server.ResponseStatusException;
 @AllArgsConstructor
 public class ReservationController {
 
-    private final ReservationService reservationService;
-    private final ReservationMapper reservationMapper;
+  private final ReservationService reservationService;
+  private final ReservationMapper reservationMapper;
 
-    @GetMapping("/reservations")
-    public List<ReservationModel> list() {
-        return reservationService.list().stream().map(reservationMapper).toList();
+  @GetMapping("/reservations")
+  public List<ReservationModel> list() {
+    return reservationService.list().stream().map(reservationMapper).toList();
+  }
+
+  @PostMapping("/reservations")
+  public ReservationModel create(@RequestBody CreateReservationRequest request) {
+    UUID requesterId = AuthenticatedUser.id();
+    var saved = reservationService.create(request.projectionId(), request.seatIds(), requesterId);
+    return reservationMapper.apply(saved);
+  }
+
+  @GetMapping("/reservations/{id}")
+  public ReservationModel get(@PathVariable UUID id) {
+    UUID requesterId = AuthenticatedUser.id();
+    boolean isPrivileged = AuthenticatedUser.hasAnyRole("MANAGER", "EMPLOYEE");
+
+    var reservation = reservationService.get(id);
+    boolean isOwner = reservation.getCreatedBy().getId().equals(requesterId);
+    if (!isPrivileged && !isOwner) {
+      throw new ResponseStatusException(HttpStatus.FORBIDDEN);
     }
 
-    @PostMapping("/reservations")
-    public ReservationModel create(@RequestBody CreateReservationRequest request) {
-        UUID requesterId = AuthenticatedUser.id();
-        var saved = reservationService.create(request.projectionId(), request.seatIds(), requesterId);
-        return reservationMapper.apply(saved);
-    }
+    return reservationMapper.apply(reservation);
+  }
 
-    @GetMapping("/reservations/{id}")
-    public ReservationModel get(@PathVariable UUID id) {
-        UUID requesterId = AuthenticatedUser.id();
-        boolean isPrivileged = AuthenticatedUser.hasAnyRole("MANAGER", "EMPLOYEE");
+  @PutMapping("/reservation")
+  public ReservationModel update(@RequestBody UpdateReservationRequest request) {
+    UUID requesterId = AuthenticatedUser.id();
+    boolean isEmployeeOrManager = AuthenticatedUser.hasAnyRole("MANAGER", "EMPLOYEE");
 
-        var reservation = reservationService.get(id);
-        boolean isOwner = reservation.getCreatedBy().getId().equals(requesterId);
-        if (!isPrivileged && !isOwner) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }
-
-        return reservationMapper.apply(reservation);
-    }
-
-    @PutMapping("/reservation")
-    public ReservationModel update(@RequestBody UpdateReservationRequest request) {
-        UUID requesterId = AuthenticatedUser.id();
-        boolean isEmployeeOrManager = AuthenticatedUser.hasAnyRole("MANAGER", "EMPLOYEE");
-
-        var updated =
-                reservationService.update(
-                        request.id(), request.status(), request.seatIds(), requesterId, isEmployeeOrManager);
-        return reservationMapper.apply(updated);
-    }
+    var updated =
+        reservationService.update(
+            request.id(), request.status(), request.seatIds(), requesterId, isEmployeeOrManager);
+    return reservationMapper.apply(updated);
+  }
 }

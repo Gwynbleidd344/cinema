@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class AuthController {
 
-    private final AuthService authService;
+  private final AuthService authService;
 
-    @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
-        var result = authService.login(request.email(), request.password());
-        var user = result.user();
-        return ResponseEntity.ok(new AuthResponse(result.token(), user.getId(), user.getRole()));
-    }
+  @PostMapping("/login")
+  public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
+    var result = authService.login(request.email(), request.password());
+    var user = result.user();
+    return ResponseEntity.ok(new AuthResponse(result.token(), user.getId(), user.getRole()));
+  }
 }

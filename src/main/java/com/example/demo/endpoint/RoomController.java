@@ -19,22 +19,22 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class RoomController {
 
-    private final RoomService roomService;
-    private final RoomMapper roomMapper;
+  private final RoomService roomService;
+  private final RoomMapper roomMapper;
 
-    @GetMapping("/rooms")
-    public List<RoomModel> list() {
-        return roomService.list().stream().map(roomMapper).toList();
-    }
+  @GetMapping("/rooms")
+  public List<RoomModel> list() {
+    return roomService.list().stream().map(roomMapper).toList();
+  }
 
-    @GetMapping("/rooms/{id}")
-    public RoomModel get(@PathVariable UUID id) {
-        return roomMapper.apply(roomService.get(id));
-    }
+  @GetMapping("/rooms/{id}")
+  public RoomModel get(@PathVariable UUID id) {
+    return roomMapper.apply(roomService.get(id));
+  }
 
-    @PutMapping("/rooms")
-    public RoomModel upsert(@RequestBody UpsertRoomRequest request) {
-        var saved = roomService.upsert(request.id(), request.number(), request.capacity());
-        return roomMapper.apply(saved);
-    }
+  @PutMapping("/rooms")
+  public RoomModel upsert(@RequestBody UpsertRoomRequest request) {
+    var saved = roomService.upsert(request.id(), request.number(), request.capacity());
+    return roomMapper.apply(saved);
+  }
 }

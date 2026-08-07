@@ -16,19 +16,19 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class UserController {
 
-    private final UserService userService;
-    private final UserMapper userMapper;
+  private final UserService userService;
+  private final UserMapper userMapper;
 
-    @PostMapping
-    public ResponseEntity<UserModel> register(@RequestBody RegisterUserRequest request) {
-        var saved =
-                userService.register(
-                        request.firstName(),
-                        request.lastName(),
-                        request.birthdate(),
-                        request.email(),
-                        request.phone(),
-                        request.password());
-        return ResponseEntity.ok(userMapper.apply(saved));
-    }
+  @PostMapping
+  public ResponseEntity<UserModel> register(@RequestBody RegisterUserRequest request) {
+    var saved =
+        userService.register(
+            request.firstName(),
+            request.lastName(),
+            request.birthdate(),
+            request.email(),
+            request.phone(),
+            request.password());
+    return ResponseEntity.ok(userMapper.apply(saved));
+  }
 }

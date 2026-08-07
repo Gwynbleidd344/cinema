@@ -23,42 +23,42 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class MovieController {
 
-    private final MovieService movieService;
-    private final MovieMapper movieMapper;
+  private final MovieService movieService;
+  private final MovieMapper movieMapper;
 
-    @GetMapping("/movies")
-    public List<MovieModel> list() {
-        return movieService.list().stream().map(movieMapper).toList();
-    }
+  @GetMapping("/movies")
+  public List<MovieModel> list() {
+    return movieService.list().stream().map(movieMapper).toList();
+  }
 
-    @GetMapping("/movies/{id}")
-    public MovieModel get(@PathVariable UUID id) {
-        return movieMapper.apply(movieService.get(id));
-    }
+  @GetMapping("/movies/{id}")
+  public MovieModel get(@PathVariable UUID id) {
+    return movieMapper.apply(movieService.get(id));
+  }
 
-    @PostMapping("/movies")
-    public MovieModel create(@RequestBody CreateMovieRequest request) {
-        var saved =
-                movieService.create(
-                        request.title(), request.genres(), request.description(), request.duration());
-        return movieMapper.apply(saved);
-    }
+  @PostMapping("/movies")
+  public MovieModel create(@RequestBody CreateMovieRequest request) {
+    var saved =
+        movieService.create(
+            request.title(), request.genres(), request.description(), request.duration());
+    return movieMapper.apply(saved);
+  }
 
-    @PutMapping("/movies")
-    public MovieModel upsert(@RequestBody UpsertMovieRequest request) {
-        var saved =
-                movieService.upsert(
-                        request.id(),
-                        request.title(),
-                        request.genres(),
-                        request.description(),
-                        request.duration());
-        return movieMapper.apply(saved);
-    }
+  @PutMapping("/movies")
+  public MovieModel upsert(@RequestBody UpsertMovieRequest request) {
+    var saved =
+        movieService.upsert(
+            request.id(),
+            request.title(),
+            request.genres(),
+            request.description(),
+            request.duration());
+    return movieMapper.apply(saved);
+  }
 
-    @DeleteMapping("/movies/{id}")
-    public ResponseEntity<Void> delete(@PathVariable UUID id) {
-        movieService.delete(id);
-        return ResponseEntity.noContent().build();
-    }
+  @DeleteMapping("/movies/{id}")
+  public ResponseEntity<Void> delete(@PathVariable UUID id) {
+    movieService.delete(id);
+    return ResponseEntity.noContent().build();
+  }
 }

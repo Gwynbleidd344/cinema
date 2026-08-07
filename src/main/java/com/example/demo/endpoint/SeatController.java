@@ -20,22 +20,22 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class SeatController {
 
-    private final SeatService seatService;
-    private final SeatMapper seatMapper;
+  private final SeatService seatService;
+  private final SeatMapper seatMapper;
 
-    @GetMapping("/seats")
-    public List<SeatModel> list(@RequestParam(required = false) UUID roomId) {
-        return seatService.list(roomId).stream().map(seatMapper).toList();
-    }
+  @GetMapping("/seats")
+  public List<SeatModel> list(@RequestParam(required = false) UUID roomId) {
+    return seatService.list(roomId).stream().map(seatMapper).toList();
+  }
 
-    @GetMapping("/seats/{id}")
-    public SeatModel get(@PathVariable UUID id) {
-        return seatMapper.apply(seatService.get(id));
-    }
+  @GetMapping("/seats/{id}")
+  public SeatModel get(@PathVariable UUID id) {
+    return seatMapper.apply(seatService.get(id));
+  }
 
-    @PutMapping("/seats")
-    public SeatModel upsert(@RequestBody UpsertSeatRequest request) {
-        var saved = seatService.upsert(request.id(), request.number(), request.roomId());
-        return seatMapper.apply(saved);
-    }
+  @PutMapping("/seats")
+  public SeatModel upsert(@RequestBody UpsertSeatRequest request) {
+    var saved = seatService.upsert(request.id(), request.number(), request.roomId());
+    return seatMapper.apply(saved);
+  }
 }

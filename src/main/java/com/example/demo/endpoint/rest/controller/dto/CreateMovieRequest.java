@@ -5,4 +5,4 @@ import java.time.Duration;
 import java.util.Set;
 
 public record CreateMovieRequest(
-        String title, Set<Genre> genres, String description, Duration duration) {}
+    String title, Set<Genre> genres, String description, Duration duration) {}
