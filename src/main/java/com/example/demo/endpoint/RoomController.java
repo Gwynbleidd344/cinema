@@ -1,6 +1,6 @@
-package com.example.demo.endpoint.rest.controller.room;
+package com.example.demo.endpoint;
 
-import com.example.demo.endpoint.rest.controller.room.dto.UpsertRoomRequest;
+import com.example.demo.endpoint.rest.controller.dto.UpsertRoomRequest;
 import com.example.demo.model.RoomModel;
 import com.example.demo.model.mapper.RoomMapper;
 import com.example.demo.service.RoomService;

@@ -1,7 +1,7 @@
-package com.example.demo.endpoint.rest.controller.auth;
+package com.example.demo.endpoint;
 
-import com.example.demo.endpoint.rest.controller.auth.dto.AuthResponse;
-import com.example.demo.endpoint.rest.controller.auth.dto.LoginRequest;
+import com.example.demo.endpoint.rest.controller.dto.AuthResponse;
+import com.example.demo.endpoint.rest.controller.dto.LoginRequest;
 import com.example.demo.service.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;

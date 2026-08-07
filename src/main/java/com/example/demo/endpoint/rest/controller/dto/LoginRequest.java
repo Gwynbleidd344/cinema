@@ -1,3 +1,3 @@
-package com.example.demo.endpoint.rest.controller.auth.dto;
+package com.example.demo.endpoint.rest.controller.dto;
 
 public record LoginRequest(String email, String password) {}

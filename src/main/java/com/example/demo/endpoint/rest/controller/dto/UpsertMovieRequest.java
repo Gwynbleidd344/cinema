@@ -1,4 +1,4 @@
-package com.example.demo.endpoint.rest.controller.movie.dto;
+package com.example.demo.endpoint.rest.controller.dto;
 
 import com.example.demo.entity.enums.Genre;
 import java.time.Duration;

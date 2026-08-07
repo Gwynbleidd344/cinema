@@ -1,7 +1,7 @@
-package com.example.demo.endpoint.rest.controller.movie;
+package com.example.demo.endpoint;
 
-import com.example.demo.endpoint.rest.controller.movie.dto.CreateMovieRequest;
-import com.example.demo.endpoint.rest.controller.movie.dto.UpsertMovieRequest;
+import com.example.demo.endpoint.rest.controller.dto.CreateMovieRequest;
+import com.example.demo.endpoint.rest.controller.dto.UpsertMovieRequest;
 import com.example.demo.model.MovieModel;
 import com.example.demo.model.mapper.MovieMapper;
 import com.example.demo.service.MovieService;

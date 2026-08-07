@@ -1,4 +1,4 @@
-package com.example.demo.endpoint.rest.controller.seat.dto;
+package com.example.demo.endpoint.rest.controller.dto;
 
 import java.util.UUID;
 

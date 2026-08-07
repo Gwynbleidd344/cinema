@@ -1,4 +1,4 @@
-package com.example.demo.endpoint.rest.controller.user.dto;
+package com.example.demo.endpoint.rest.controller.dto;
 
 import java.time.LocalDate;
 

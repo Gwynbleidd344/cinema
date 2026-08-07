@@ -1,4 +1,4 @@
-package com.example.demo.endpoint.rest.controller.reservation.dto;
+package com.example.demo.endpoint.rest.controller.dto;
 
 import com.example.demo.entity.enums.ReservationStatus;
 import java.util.Set;

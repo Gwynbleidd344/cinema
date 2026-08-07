@@ -1,7 +1,7 @@
-package com.example.demo.endpoint.rest.controller.reservation;
+package com.example.demo.endpoint;
 
-import com.example.demo.endpoint.rest.controller.reservation.dto.CreateReservationRequest;
-import com.example.demo.endpoint.rest.controller.reservation.dto.UpdateReservationRequest;
+import com.example.demo.endpoint.rest.controller.dto.CreateReservationRequest;
+import com.example.demo.endpoint.rest.controller.dto.UpdateReservationRequest;
 import com.example.demo.model.ReservationModel;
 import com.example.demo.model.mapper.ReservationMapper;
 import com.example.demo.security.AuthenticatedUser;

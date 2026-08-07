@@ -1,6 +1,6 @@
-package com.example.demo.endpoint.rest.controller.user;
+package com.example.demo.endpoint;
 
-import com.example.demo.endpoint.rest.controller.user.dto.RegisterUserRequest;
+import com.example.demo.endpoint.rest.controller.dto.RegisterUserRequest;
 import com.example.demo.model.UserModel;
 import com.example.demo.model.mapper.UserMapper;
 import com.example.demo.service.UserService;

@@ -1,6 +1,6 @@
-package com.example.demo.endpoint.rest.controller.seat;
+package com.example.demo.endpoint;
 
-import com.example.demo.endpoint.rest.controller.seat.dto.UpsertSeatRequest;
+import com.example.demo.endpoint.rest.controller.dto.UpsertSeatRequest;
 import com.example.demo.model.SeatModel;
 import com.example.demo.model.mapper.SeatMapper;
 import com.example.demo.service.SeatService;
