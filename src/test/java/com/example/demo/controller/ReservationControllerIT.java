@@ -189,27 +189,27 @@ class ReservationControllerIT extends FacadeIT {
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
   }
 
-//  @Test
-//  void manager_can_list_all_reservations() {
-//    var fixture = cinemaFixtures.create();
-//    var owner = testUserFactory.create(UserRole.CLIENT);
-//    var manager = testUserFactory.create(UserRole.MANAGER);
-//    createReservation(
-//        owner.token(),
-//        fixture.projection().getId(),
-//        Set.of(fixture.seatA().getId()),
-//        ReservationModel.class);
-//
-//    ResponseEntity<ReservationModel[]> response =
-//        restTemplate.exchange(
-//            "/api/v1/reservations",
-//            HttpMethod.GET,
-//            new HttpEntity<>(authHeaders(manager.token())),
-//            ReservationModel[].class);
-//
-//    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-//    assertThat(response.getBody()).isNotEmpty();
-//  }
+  //  @Test
+  //  void manager_can_list_all_reservations() {
+  //    var fixture = cinemaFixtures.create();
+  //    var owner = testUserFactory.create(UserRole.CLIENT);
+  //    var manager = testUserFactory.create(UserRole.MANAGER);
+  //    createReservation(
+  //        owner.token(),
+  //        fixture.projection().getId(),
+  //        Set.of(fixture.seatA().getId()),
+  //        ReservationModel.class);
+  //
+  //    ResponseEntity<ReservationModel[]> response =
+  //        restTemplate.exchange(
+  //            "/api/v1/reservations",
+  //            HttpMethod.GET,
+  //            new HttpEntity<>(authHeaders(manager.token())),
+  //            ReservationModel[].class);
+  //
+  //    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+  //    assertThat(response.getBody()).isNotEmpty();
+  //  }
 
   @Test
   void owner_can_change_seats_without_validating() {
